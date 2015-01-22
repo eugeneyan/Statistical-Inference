@@ -5,4 +5,4 @@ Slides for Week 1 & Week 2 (probability and distribution) are available here: ht
 
 Slides for Week 3 (hypothesis testing and t tests) are available here: http://www.slideshare.net/eugeneyan/statistical-inference-3
 
-Slides for Week 4 (ANOVA and corrections) are available here: to be updated
+Slides for Week 4 (statistical power, ANOVA, post hoc tests) are available here: http://www.slideshare.net/eugeneyan/statistical-inference-4
