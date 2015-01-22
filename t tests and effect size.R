@@ -1,13 +1,11 @@
 # install packages if necessary
 # install.packages('psych')
-# install.packages('car')
 # install.packages('lsr')
 # install.packages('reshape')
-
+# install.packages('ggplot2')
 
 # load packages
 library(psych)
-library(car)
 library(lsr)
 library(reshape)
 library(ggplot2)
@@ -32,10 +30,10 @@ wm_c = subset(wm, wm$train == '0')
 wm_t = subset(wm, wm$train == '1')
 
 # using dplyr
+# install.packages('dplyr')
+# library(dplyr)
 # wm_c <- wm %>%
 #   filter (train == '0')
-# 
-# using dplyr
 # wm_t <- wm %>%
 #   filter (train == '1')
 
@@ -50,29 +48,31 @@ t.test(wm_t$post, wm_t$pre, pair = T)
 # effect size for control group
 cohensD(wm_c$post, wm_c$pre, method = 'paired')
 
-# effect size for control group
+# effect size for training group
 cohensD(wm_t$post, wm_t$pre, method = 'paired')
 
-# Cohen's d for dependent t-test
+# Cohen's d for dependent t-test (train == 1)
 # d = mean of difference / standard deviation of difference
+describeBy(wm, wm$train)
 (3.49/2.15)
 
 # box plot for visualization
 long_wm <- melt(wm, id = c('cond', 'train', 'gain'))
 
 ggplot(long_wm, aes(x = cond, y = value, color = variable)) +
-  geom_boxplot() + 
+  geom_boxplot()
 
 # so it seems that the practice effect (i.e., the effect of doing the test once before
 # doing it again) is significant.  What about the effect of training?
 
-# Independent t-test
+# Independent t-test (comparing between training vs. no training)
 t.test(wm$gain ~ wm$train, var.equal = T)
- 
+
 cohensD(wm$gain ~ wm$train, method = 'pooled')
 
-# Cohen's d for independent t-test
+# Cohen's d for independent t-test (train vs. no training)
 # d = mean of difference / pooled standard deviation of difference
+describeBy(wm, wm$train)
 pooled_sd = (79/118 * 2.15) + (39/118 * 1.39)
 (3.4875 - 1.975)/pooled_sd
 
@@ -80,9 +80,14 @@ pooled_sd = (79/118 * 2.15) + (39/118 * 1.39)
 ggplot(wm, aes(x=cond, y=gain, fill = cond)) +
   geom_boxplot()
 
-# ANOVA
+
+
+##### Week 4 #####
+# Running an ANOVA with dependent variable: gain and independent variable: condition (5 levels)
 aov.model <- aov(wm$gain ~ wm$cond)
 summary(aov.model)
 
-summary(wm)
-
+# post-hoc tests 
+# notice the difference in p-value when comparing t08 to t12 from the two tests below
+pairwise.t.test(wm$gain, wm$cond, p.adj = 'bonf')
+pairwise.t.test(wm$gain, wm$cond, p.adj = 'none')
